@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exam-Style Practice: The School Garden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef4e6;
+  --paper:#fbfdf8;
+  --ink:#1f3a33;
+  --muted:#5b7068;
+  --leaf:#2f7a45;
+  --leaf-dark:#215a33;
+  --soil:#7a5236;
+  --sun:#f2b632;
+  --ok:#2f7a45;
+  --ok-bg:#dff1e1;
+  --bad:#b5362f;
+  --bad-bg:#fbe3e0;
+  --line:#cfdcc6;
+  --display:"Fredoka","Trebuchet MS","Segoe UI",system-ui,sans-serif;
+  --body:"Nunito","Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.55;
+  padding:clamp(12px,3vw,40px);
+}
+.sheet{
+  max-width:880px;margin:0 auto;background:var(--paper);border:2px solid var(--ink);border-radius:20px;
+  overflow:hidden;box-shadow:6px 6px 0 var(--leaf);
+}
+header{padding:clamp(18px,4vw,36px) clamp(18px,4vw,40px) 18px;border-bottom:2px solid var(--line)}
+.school{margin:0 0 6px;color:var(--muted);font-weight:700;font-size:15px}
+h1{margin:0;font-family:var(--display);font-weight:600;font-size:clamp(26px,5vw,40px);line-height:1.15;letter-spacing:-.01em}
+.tag{display:inline-block;margin:0 0 10px;padding:2px 12px;border-radius:999px;background:var(--sun);color:#3b2a00;font-weight:700;font-size:14px}
+main{padding:clamp(18px,4vw,36px) clamp(18px,4vw,40px)}
+.passage{
+  margin:0 0 28px;padding:clamp(16px,3vw,26px);background:#fff;border-left:8px solid var(--leaf);border-radius:4px 14px 14px 4px;
+  font-size:clamp(18px,2.6vw,22px);line-height:2.1;max-width:68ch;
+}
+.blank{
+  font:inherit;color:inherit;cursor:pointer;background:none;border:0;border-bottom:3px solid var(--ink);
+  padding:0 8px;margin:0 2px;min-width:110px;text-align:center;border-radius:6px 6px 0 0;
+}
+.blank .n{font-size:.72em;font-weight:700;color:var(--muted);margin-right:4px}
+.blank.filled{border-bottom-color:var(--leaf);color:var(--leaf-dark);font-weight:700;background:#eaf5e6}
+.blank.right{border-bottom-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+.blank.wrong{border-bottom-color:var(--bad);background:var(--bad-bg);color:var(--bad)}
+.blank:focus-visible,.opt input:focus-visible+span,button.act:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.qs{display:grid;gap:14px;margin:0;padding:0}
+fieldset.q{
+  margin:0;padding:12px 14px 12px;border:2px solid var(--line);border-radius:14px;background:#fff;
+  display:grid;grid-template-columns:44px 1fr;column-gap:8px;align-items:start;
+}
+fieldset.q.is-active{border-color:var(--leaf)}
+legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.num{font-family:var(--display);font-weight:600;font-size:24px;color:var(--leaf);padding-top:4px}
+.opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.opt{position:relative;display:block}
+.opt input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.opt span{
+  display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:6px 12px;text-align:center;
+  border:2px solid var(--line);border-radius:12px;background:var(--paper);font-weight:600;cursor:pointer;
+  transition:background .15s,border-color .15s;
+}
+.opt:hover span{border-color:var(--leaf)}
+.opt input:checked+span{border-color:var(--leaf);background:#e3f2dc;color:var(--leaf-dark);font-weight:700}
+.opt.right span{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+.opt.right span::after{content:"\2713"}
+.opt.wrong span{border-color:var(--bad);background:var(--bad-bg);color:var(--bad)}
+.opt.wrong span::after{content:"\2717"}
+.opt.answer span{border-color:var(--ok);border-style:dashed}
+.why{grid-column:2;margin:10px 0 0;font-size:16px;color:var(--muted)}
+.why[hidden]{display:none}
+.why strong{color:var(--ink)}
+.bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:24px}
+button.act{
+  font-family:var(--display);font-weight:500;font-size:19px;padding:10px 24px;border-radius:12px;cursor:pointer;
+  border:2px solid var(--ink);background:var(--leaf);color:#fff;box-shadow:3px 3px 0 var(--ink);
+}
+button.act:hover{background:var(--leaf-dark)}
+button.act:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+button.act.ghost{background:#fff;color:var(--ink)}
+button.act.ghost:hover{background:#f0f5ea}
+.hint{color:var(--muted);font-size:16px}
+.result{
+  margin-top:22px;padding:16px 18px;border:2px solid var(--ink);border-radius:14px;background:#fff7dc;
+  display:grid;gap:6px;
+}
+.result[hidden]{display:none}
+.result h2{margin:0;font-family:var(--display);font-weight:600;font-size:26px}
+.result p{margin:0}
+.garden{display:flex;gap:6px;font-size:32px;line-height:1}
+.garden span{display:inline-block;filter:grayscale(1);opacity:.45}
+.garden span.bloom{filter:none;opacity:1;animation:pop .45s ease-out both}
+@keyframes pop{from{transform:scale(.4) rotate(-12deg)}to{transform:scale(1) rotate(0)}}
+footer{padding:14px clamp(18px,4vw,40px);border-top:2px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;color:var(--muted);font-size:15px;font-weight:600}
+@media (max-width:640px){
+  body{font-size:17px}
+  .opts{grid-template-columns:1fr}
+  fieldset.q{grid-template-columns:34px 1fr}
+  .blank{min-width:90px}
+}
+@media (prefers-reduced-motion:reduce){.garden span.bloom{animation:none}.opt span{transition:none}}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <p class="school">Khawlah Bint Thalabah (5-9)</p>
+    <p class="tag">Exam-style practice</p>
+    <h1>Read the paragraph. Choose the answer.</h1>
+  </header>
+
+  <main>
+    <p class="passage" id="passage" aria-label="Paragraph with five blanks"></p>
+
+    <form id="quiz" class="qs" onsubmit="return false"></form>
+
+    <div class="bar">
+      <button type="button" class="act" id="checkBtn">Check answers</button>
+      <button type="button" class="act ghost" id="resetBtn">Try again</button>
+      <span class="hint" id="hint">Answer all 5 questions, then check.</span>
+    </div>
+
+    <section class="result" id="result" hidden aria-live="polite">
+      <h2 id="score"></h2>
+      <div class="garden" id="garden" aria-hidden="true"></div>
+      <p id="msg"></p>
+    </section>
+  </main>
+
+  <footer>
+    <span>Created by T.Badria Alfalahi</span>
+    <span>Khawlah Bint Thalabah (5-9)</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  // Passage pieces: text before each blank, then the final text.
+  var parts = [
+    "Next Saturday, we will visit the school garden. If we ",
+    " flowers, more bees will come. If Sara comes, she ",
+    " her camera. If the weather ",
+    " hot, we will put water outside. If we see birds, we will ",
+    " them. If it rains, we ",
+    " in the garden."
+  ];
+  var Q = [
+    {o:["planted","will plant","plant"], a:2, why:"In the if-clause, use the present simple: if we plant."},
+    {o:["will bring","brings","brought"], a:0, why:"In the result clause, use will + base verb: she will bring."},
+    {o:["will be","is","was"], a:1, why:"In the if-clause, use the present simple: if the weather is hot."},
+    {o:["watching","watched","watch"], a:2, why:"After will, use the base verb: we will watch."},
+    {o:["don\u2019t play","won\u2019t play","didn\u2019t play"], a:1, why:"The result of rain is in the future, so use won\u2019t + base verb: we won\u2019t play."}
+  ];
+  var answers = [null,null,null,null,null];
+  var checked = false;
+
+  var passage = document.getElementById('passage');
+  var quiz = document.getElementById('quiz');
+  var blanks = [];
+  var rows = [];
+
+  // Build the passage with five blank buttons.
+  parts.forEach(function(t, i){
+    passage.appendChild(document.createTextNode(t));
+    if (i < Q.length) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'blank';
+      b.setAttribute('aria-label', 'Blank ' + (i + 1) + ': go to question ' + (i + 1));
+      b.addEventListener('click', function(){ focusQuestion(i); });
+      passage.appendChild(b);
+      blanks.push(b);
+    }
+  });
+
+  // Build the questions.
+  Q.forEach(function(q, i){
+    var fs = document.createElement('fieldset');
+    fs.className = 'q';
+    var lg = document.createElement('legend');
+    lg.textContent = 'Question ' + (i + 1);
+    fs.appendChild(lg);
+
+    var num = document.createElement('div');
+    num.className = 'num';
+    num.textContent = (i + 1) + '.';
+    fs.appendChild(num);
+
+    var opts = document.createElement('div');
+    opts.className = 'opts';
+    q.o.forEach(function(text, j){
+      var lab = document.createElement('label');
+      lab.className = 'opt';
+      var inp = document.createElement('input');
+      inp.type = 'radio';
+      inp.name = 'q' + i;
+      inp.value = j;
+      inp.addEventListener('change', function(){ choose(i, j); });
+      inp.addEventListener('focus', function(){ setActive(i); });
+      var sp = document.createElement('span');
+      sp.textContent = 'abc'.charAt(j) + ') ' + text;
+      lab.appendChild(inp);
+      lab.appendChild(sp);
+      opts.appendChild(lab);
+    });
+    fs.appendChild(opts);
+
+    var why = document.createElement('p');
+    why.className = 'why';
+    why.hidden = true;
+    fs.appendChild(why);
+
+    quiz.appendChild(fs);
+    rows.push({fs:fs, why:why, labels:[].slice.call(opts.children)});
+  });
+
+  function renderBlanks(){
+    blanks.forEach(function(b, i){
+      b.textContent = '';
+      var n = document.createElement('span');
+      n.className = 'n';
+      n.textContent = '(' + (i + 1) + ')';
+      b.appendChild(n);
+      var v = answers[i];
+      b.appendChild(document.createTextNode(v === null ? '______' : Q[i].o[v]));
+      b.classList.toggle('filled', v !== null && !checked);
+    });
+  }
+
+  function setActive(i){
+    rows.forEach(function(r, k){ r.fs.classList.toggle('is-active', k === i); });
+  }
+
+  function focusQuestion(i){
+    var r = rows[i];
+    var first = r.labels[answers[i] === null ? 0 : answers[i]].querySelector('input');
+    r.fs.scrollIntoView({behavior:'smooth', block:'center'});
+    first.focus({preventScroll:true});
+  }
+
+  function clearFeedback(){
+    checked = false;
+    rows.forEach(function(r){
+      r.why.hidden = true;
+      r.labels.forEach(function(l){ l.classList.remove('right','wrong','answer'); });
+    });
+    blanks.forEach(function(b){ b.classList.remove('right','wrong'); });
+    document.getElementById('result').hidden = true;
+  }
+
+  function choose(i, j){
+    if (checked) clearFeedback();
+    answers[i] = j;
+    renderBlanks();
+    var left = answers.filter(function(a){ return a === null; }).length;
+    document.getElementById('hint').textContent = left
+      ? 'Answer all 5 questions, then check. ' + left + ' to go.'
+      : 'All answered. Press \u201cCheck answers\u201d.';
+  }
+
+  function check(){
+    var hint = document.getElementById('hint');
+    var score = 0;
+    checked = true;
+    rows.forEach(function(r, i){
+      var v = answers[i];
+      var ok = v === Q[i].a;
+      if (ok) score++;
+      r.labels.forEach(function(l){ l.classList.remove('right','wrong','answer'); });
+      if (v !== null) r.labels[v].classList.add(ok ? 'right' : 'wrong');
+      if (!ok) r.labels[Q[i].a].classList.add('answer');
+      r.why.textContent = '';
+      var s = document.createElement('strong');
+      s.textContent = ok ? 'Correct. ' : (v === null ? 'No answer. ' : 'Not quite. ');
+      r.why.appendChild(s);
+      r.why.appendChild(document.createTextNode(Q[i].why));
+      r.why.hidden = false;
+      blanks[i].classList.remove('filled');
+      blanks[i].classList.add(ok ? 'right' : 'wrong');
+    });
+    renderBlanks();
+    blanks.forEach(function(b, i){ if (answers[i] === null) b.classList.add('wrong'); });
+
+    var garden = document.getElementById('garden');
+    garden.textContent = '';
+    for (var k = 0; k < Q.length; k++) {
+      var f = document.createElement('span');
+      f.textContent = k < score ? '\uD83C\uDF3B' : '\uD83C\uDF31';
+      if (k < score) f.className = 'bloom';
+      garden.appendChild(f);
+    }
+    document.getElementById('score').textContent = 'You got ' + score + ' out of ' + Q.length;
+    document.getElementById('msg').textContent =
+      score === 5 ? 'Perfect! The garden is in full bloom.' :
+      score >= 3  ? 'Nearly there. Read the notes under the questions and try again.' :
+                    'Keep growing. Remember: if + present simple, then will + base verb.';
+    document.getElementById('result').hidden = false;
+    hint.textContent = '';
+    document.getElementById('result').scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+
+  function reset(){
+    clearFeedback();
+    answers = [null,null,null,null,null];
+    [].slice.call(document.querySelectorAll('input[type=radio]')).forEach(function(r){ r.checked = false; });
+    setActive(-1);
+    renderBlanks();
+    document.getElementById('hint').textContent = 'Answer all 5 questions, then check.';
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  document.getElementById('checkBtn').addEventListener('click', check);
+  document.getElementById('resetBtn').addEventListener('click', reset);
+  renderBlanks();
+})();
+</script>
+</body>
+</html>
